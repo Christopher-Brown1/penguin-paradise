@@ -1,7 +1,11 @@
 import './App.css'
 
+import { Header } from '../src/game/Header'
+
 function App() {
-  return <><h1>penguin-paradise: JavaScript project created with A10ha</h1><p>Edit <code>src/App.jsx</code> to start creating!</p></>;
+  return <>
+  <Header />
+  </>;
 }
 
 export default App
