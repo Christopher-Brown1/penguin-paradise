@@ -1,3 +1,6 @@
 .headerContainer {
-  
+  display: flex;
+  width: 1216px;
+  justify-content: space-between;
+  align-items: center;
 }

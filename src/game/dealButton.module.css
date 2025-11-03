@@ -1,0 +1,30 @@
+.buttonContainer {
+  display: flex;
+  padding: 24px 32px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 16px;
+  border: 5px solid var(--dark);
+  background: var(--ice);
+}
+
+.textContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.textBig {
+  color: var(--dark);
+  text-align: center;
+  font-size: 24px;
+  text-transform: uppercase;
+}
+
+.textSmall {
+  color: var(--dark);
+  text-align: center;
+  font-size: 12px;
+}
