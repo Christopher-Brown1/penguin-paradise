@@ -1,0 +1,24 @@
+.headerContainer {
+  display: flex;
+  width: 1216px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardHistory {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.historyBig {
+  width: 88px;
+  height: 88px;
+  border-radius: 100px;
+}
+
+.historySmall {
+  width: 48px;
+  height: 48px;
+  border-radius: 100px;
+}
