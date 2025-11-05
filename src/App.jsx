@@ -1,11 +1,9 @@
-import './App.css'
+import "./App.css"
 
-import { Header } from '../src/game/Header'
+import { Header } from "../src/game/Header"
 
 function App() {
-  return <>
-  <Header />
-  </>;
+  return <Header />
 }
 
 export default App
