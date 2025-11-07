@@ -8,8 +8,11 @@ export const EngineProvider = ({ children }) => {
     isLoading: true,
     isDealing: false,
     cardsId: null,
+    dangerPosition: 1,
+    dangerCards: [null, null, null, null, null, null, null, null],
     history: ["dark", "dark", "dark", "dark", "dark"],
-    players: [], // TODO: Add functionality for players
+    strikes: [], // array of colors
+    players: [], // name, color, balance, position(1-8), betPosition(1-8)
   })
 
   return (
@@ -23,3 +26,7 @@ export const useEngineContext = () => {
   const { gameState, setGameState } = useContext(EngineContext)
   return { gameState, setGameState }
 }
+
+// TODO:
+// - End of round
+// - Race/round count
