@@ -18,13 +18,14 @@ export const useLogicEngine = () => {
     if (state.isDealing) {
       drawCard()
       const interval = setInterval(drawCard, DEAL_INTERVAL)
+
       return () => clearInterval(interval)
     }
   }, [state.isDealing])
 
   // After every update to history, run logic checks
   useEffect(() => {
-    if (state.strikes.length === 3) movePlayer(state.strikes[0], "backward")
+    if (state.strikes.length === 3) movePlayer(state.strikes[0], "backward") // TODO: Move to beginning
     if (
       state.players.every(({ position }) => position > state.dangerPosition)
     ) {
@@ -38,7 +39,7 @@ export const useLogicEngine = () => {
     }
   }, [state.history])
 
-  // Utils
+  // Utils - Private functions
   const fetchNewDeck = () =>
     fetch(`${DECK_API_URL}new/shuffle/?deck_count=1`)
       .then((res) => res.json())
@@ -49,7 +50,6 @@ export const useLogicEngine = () => {
           isLoading: false,
         }))
       })
-
   const drawCard = (oneOff = false) =>
     fetch(`${DECK_API_URL}${state.cardsId}/draw/?count=1`)
       .then((res) => res.json())
@@ -74,7 +74,7 @@ export const useLogicEngine = () => {
           : player.position,
     }))
 
-  // Handlers
+  // Handlers - Exported functions
   const addPlayer = (player) =>
     setGameState((prev) => ({
       ...prev,
