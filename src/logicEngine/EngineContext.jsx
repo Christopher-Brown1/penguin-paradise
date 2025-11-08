@@ -24,7 +24,7 @@ export const EngineProvider = ({ children }) => {
 
 export const useEngineContext = () => {
   const { gameState, setGameState } = useContext(EngineContext)
-  // console.log(gameState)
+  
   return { gameState, setGameState }
 }
 

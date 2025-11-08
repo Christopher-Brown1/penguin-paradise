@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useCallback } from "react"
+import { useEffect } from "react"
 
 import { DEAL_INTERVAL, DECK_API_URL, suitToPlayerMap } from "./consts"
 
@@ -10,7 +10,7 @@ export const useLogicEngine = () => {
 
   // Fetch deck on mount
   useEffect(() => {
-    if (!state.cardsId && state.isLoading) fetchNewDeck()
+    !state.cardsId && state.isLoading && fetchNewDeck()
   }, [])
 
   // Deal card on interval
@@ -25,19 +25,27 @@ export const useLogicEngine = () => {
 
   // After every update to history, run logic checks
   useEffect(() => {
-    if (state.strikes.length === 3) movePlayer(state.strikes[0], "backward") // TODO: Move to beginning
-    if (
-      state.players.length > 0 &&
-      state.players.every(({ position }) => position > state.dangerPosition)
-    ) {
-      const dangerCard = drawCard(true)
-      setGameState((state) => ({
-        ...state,
-        players: movePlayer(dangerCard, "backward"),
-        dangerCards: [...state.dangerCards, dangerCard],
-        dangerPosition: state.dangerPosition + 1,
-      }))
-    }
+    setGameState((state) => {
+      const newVal = { ...state }
+      if (newVal.strikes.length === 3) {
+        newVal.players = movePlayer(newVal.players, newVal.strikes[0], "start")
+      }
+      if (
+        newVal.players.length > 0 &&
+        newVal.players.every(({ pos }) => pos > newVal.dangerPosition)
+      ) {
+        newVal.dangerCard = drawCard(true)
+        newVal.players = movePlayer(
+          newVal.players,
+          newVal.dangerCard,
+          "backward"
+        )
+        newVal.dangerCards = [...newVal.dangerCards, newVal.dangerCard]
+        newVal.dangerPosition = newVal.dangerPosition + 1
+      }
+
+      return newVal
+    })
   }, [state.history])
 
   // Utils - Private functions
@@ -61,21 +69,29 @@ export const useLogicEngine = () => {
           ? color
           : setGameState((state) => ({
               ...state,
-              players: movePlayer(color),
+              players: movePlayer(state.players, color),
               history: [color, ...state.history],
               strikes: state.strikes.includes(color)
                 ? [color, ...state.strikes]
                 : [color],
             }))
       })
-  const movePlayer = (color, direction = "forward") =>
-    state.players.map((player) => ({
-      ...player,
-      position:
-        player.color === color
-          ? player.position + (direction === "forward" ? 1 : -1)
-          : player.position,
-    }))
+  const movePlayer = (players, color, direction = "forward") => {
+    if (direction === "start") {
+      return players.map((player) => ({
+        ...player,
+        position: player.color === color ? 1 : player.position,
+      }))
+    } else {
+      return players.map((player) => ({
+        ...player,
+        position:
+          player.color === color
+            ? player.position + (direction === "forward" ? 1 : -1)
+            : player.position,
+      }))
+    }
+  }
 
   // Handlers - Exported functions
   const addPlayer = (player) =>

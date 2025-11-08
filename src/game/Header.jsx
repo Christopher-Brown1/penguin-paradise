@@ -3,11 +3,16 @@ import style from "../game/header.module.css"
 
 import Logo from "../global/assets/logo.svg?react"
 import { DealButton } from "../game/DealButton"
-import { useLogicEngine } from "../logicEngine/useLogicEngine"
 
 export const Header = () => {
-  const { history, isDealing, toggleDealing } = useLogicEngine()
-  console.log("HISTORY: ", history)
+  const [isDealing, setIsDealing] = useState(false)
+  const [history, setHistory] = useState([
+    "dark",
+    "dark",
+    "dark",
+    "dark",
+    "dark",
+  ])
 
   return (
     <header className={style.headerContainer}>
@@ -28,7 +33,7 @@ export const Header = () => {
           />
         ))}
       </div>
-      <DealButton onToggleDealing={toggleDealing} isDealing={isDealing} />
+      <DealButton setIsDealing={setIsDealing} isDealing={isDealing} />
     </header>
   )
 }
