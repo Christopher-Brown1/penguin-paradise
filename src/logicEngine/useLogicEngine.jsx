@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from "react"
+import { useEffect, useCallback } from "react"
 
 import { DEAL_INTERVAL, DECK_API_URL, suitToPlayerMap } from "./consts"
 
 import { useEngineContext } from "./EngineContext"
 
 export const useLogicEngine = () => {
-  const { state, setGameState } = useEngineContext()
+  const { gameState: state, setGameState } = useEngineContext()
 
   // Fetch deck on mount
   useEffect(() => {
@@ -27,6 +27,7 @@ export const useLogicEngine = () => {
   useEffect(() => {
     if (state.strikes.length === 3) movePlayer(state.strikes[0], "backward") // TODO: Move to beginning
     if (
+      state.players.length > 0 &&
       state.players.every(({ position }) => position > state.dangerPosition)
     ) {
       const dangerCard = drawCard(true)
@@ -55,15 +56,17 @@ export const useLogicEngine = () => {
       .then((res) => res.json())
       .then((data) => {
         const color = suitToPlayerMap[data.cards[0].suit]
-        const players = movePlayer(color)
-        const history = [color, ...state.history]
-        const strikes = state.strikes.includes(color)
-          ? [color, ...state.strikes]
-          : [color]
 
         return oneOff
           ? color
-          : setGameState((state) => ({ ...state, players, history, strikes }))
+          : setGameState((state) => ({
+              ...state,
+              players: movePlayer(color),
+              history: [color, ...state.history],
+              strikes: state.strikes.includes(color)
+                ? [color, ...state.strikes]
+                : [color],
+            }))
       })
   const movePlayer = (color, direction = "forward") =>
     state.players.map((player) => ({
