@@ -2,14 +2,13 @@ import style from "../game/dealButton.module.css"
 
 import play from "../game/assets/play.svg"
 import pause from "../game/assets/pause.svg"
+import { useLogicEngine } from "../logicEngine/useLogicEngine"
 
-export const DealButton = ({ setIsDealing, isDealing }) => {
+export const DealButton = () => {
+  const { toggleDealing, isDealing } = useLogicEngine()
 
   return (
-    <button
-      className={style.buttonContainer}
-      onClick={() => setIsDealing((v) => !v)}
-    >
+    <button className={style.buttonContainer} onClick={() => toggleDealing()}>
       <div className={style.textContainer}>
         <h2 className={style.textBig}>Auto-Deal</h2>
         <p className={style.textSmall}>
