@@ -41,7 +41,7 @@ export const useLogicEngine = () => {
   }
 
   const fetchNewDeck = () =>
-    fetch(`${DECK_API_URL}new/shuffle/?deck_count=5`)
+    fetch(`${DECK_API_URL}new/shuffle/?deck_count=2`)
       .then((res) => res.json())
       .then((data) => {
         setGameState((prev) => ({
