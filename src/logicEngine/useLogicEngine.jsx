@@ -77,7 +77,7 @@ export const useLogicEngine = () => {
           newVal.dangerPosition = newVal.dangerPosition + 1
         })
 
-      // If player reaches the end of the board, end round and reset
+      // If player reaches the end of the board, end round
       if (newVal.players.some(({ position }) => position === 10)) {
         if (newVal.roundCount === 5) return { ...newVal, isGameOver: true }
 
