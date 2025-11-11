@@ -2,36 +2,44 @@ import "./App.css"
 
 import { Header } from "../src/game/Header"
 import { useLogicEngine } from "./logicEngine/useLogicEngine"
+import { Onboarding } from "./onboarding/Onboarding"
 
 function App() {
-  const { players, roundCount, dangerCards } = useLogicEngine()
+  const { players, roundCount, dangerCards, isOnboarding, isGameOver } =
+    useLogicEngine()
 
-  return (
-    <>
-      <Header />
-      <p style={{ fontSize: "20px", color: "var(--dark)" }}>
-        Round: {roundCount}
-      </p>
-      {players?.map((player) => (
-        <div
-          key={player.name}
-          style={{ background: `var(--player-${player.color})` }}
-        >
-          <h2>{player.name}</h2>
-          <p style={{ fontSize: "20px", color: "var(--dark)" }}>
-            {" "}
-            position: {player.position}
-          </p>
-        </div>
-      ))}
+  if (isOnboarding) {
+    return <Onboarding />
+  } else if (isGameOver) {
+    return <p>gameover</p>
+  } else {
+    return (
+      <>
+        <Header />
+        <p style={{ fontSize: "20px", color: "var(--dark)" }}>
+          Round: {roundCount}
+        </p>
+        {players?.map((player) => (
+          <div
+            key={player.name}
+            style={{ background: `var(--player-${player.color})` }}
+          >
+            <h2>{player.name}</h2>
+            <p style={{ fontSize: "20px", color: "var(--dark)" }}>
+              {" "}
+              position: {player.position}
+            </p>
+          </div>
+        ))}
 
-      {dangerCards.map((card, i) => (
-        <div key={i} style={{ background: `var(--player-${card})` }}>
-          <p style={{ fontSize: "20px", color: "var(--dark)" }}>{card}</p>
-        </div>
-      ))}
-    </>
-  )
+        {dangerCards.map((card, i) => (
+          <div key={i} style={{ background: `var(--player-${card})` }}>
+            <p style={{ fontSize: "20px", color: "var(--dark)" }}>{card}</p>
+          </div>
+        ))}
+      </>
+    )
+  }
 }
 
 export default App

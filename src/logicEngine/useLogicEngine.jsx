@@ -98,10 +98,13 @@ export const useLogicEngine = () => {
   }, [state.history])
 
   // Handlers - Exported functions
-  const addPlayer = (player) =>
+  const addPlayer = (name, color) =>
     setGameState((prev) => ({
       ...prev,
-      players: [...prev.players, player],
+      players: [
+        ...prev.players,
+        { name, color, balance: 5, position: 1, betPosition: 1 },
+      ],
     }))
   const toggleDealing = () =>
     setGameState((prev) => ({ ...prev, isDealing: !prev.isDealing }))
@@ -112,6 +115,8 @@ export const useLogicEngine = () => {
         player.color === color ? { ...player, betPosition: bet } : player
       ),
     }))
+  const startGame = () =>
+    setGameState((prev) => ({ ...prev, isOnboarding: false }))
 
-  return { ...state, toggleDealing, addPlayer, placeBet }
+  return { ...state, toggleDealing, addPlayer, placeBet, startGame }
 }

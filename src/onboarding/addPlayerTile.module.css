@@ -1,36 +1,45 @@
 .tile {
   display: flex;
-  width: 360px;
-  height: 160px;
-  padding: 8px;
+  /* width: 360px; */
+  /* height: 160px; */
+  padding: 32px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 16px;
   border-radius: 12px;
-  border: 3px solid var(--player-blue-dark);
-  background: var(--player-blue);
+}
+
+.actionContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 }
 
 .textInput {
   padding: 2px 10px;
   border-radius: 12px;
-  border: 2px solid var(--player-blue-dark, #4d2575);
-  background-color: var(--player-blue);
-  color: var(--player-blue-dark);
   text-align: center;
   font-family: "Fredoka One";
   font-size: 24px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
+  width: fit-content;
 }
 .textInput::placeholder {
-  color: var(--player-blue-dark);
+  /* color: var(--player-blue-dark); */
   text-align: center;
   font-family: "Fredoka One";
   font-size: 24px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
+}
+
+.saveButton {
+  display: flex;
+  padding: 12px 12px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  color: var(--player-green-dark, #238201);
+  text-align: center;
+  font-family: "Fredoka One";
+  font-size: 12px;
 }

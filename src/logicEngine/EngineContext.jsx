@@ -6,6 +6,7 @@ const EngineContext = createContext()
 
 export const EngineProvider = ({ children }) => {
   const [gameState, setGameState] = useState({
+    isOnboarding: true,
     isDealing: false,
     isRoundOver: false,
     isGameOver: false,
@@ -15,36 +16,7 @@ export const EngineProvider = ({ children }) => {
     dangerCards: [null, null, null, null, null, null, null, null],
     history: ["dark", "dark", "dark", "dark", "dark"],
     strikes: [], // array of colors
-    players: [
-      {
-        name: "Player 1",
-        color: "orange",
-        balance: 100,
-        position: 1,
-        betPosition: 1,
-      },
-      {
-        name: "Player 2",
-        color: "green",
-        balance: 100,
-        position: 1,
-        betPosition: 2,
-      },
-      {
-        name: "Player 3",
-        color: "blue",
-        balance: 100,
-        position: 1,
-        betPosition: 3,
-      },
-      {
-        name: "Player 4",
-        color: "purple",
-        balance: 100,
-        position: 1,
-        betPosition: 4,
-      },
-    ],
+    players: [],
   })
 
   const intervalRef = useRef(null)
