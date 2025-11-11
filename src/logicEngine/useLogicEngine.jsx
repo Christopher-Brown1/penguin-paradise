@@ -77,21 +77,25 @@ export const useLogicEngine = () => {
           newVal.dangerPosition = newVal.dangerPosition + 1
         })
 
-      // If player reaches the end of the board, end round and reset
+      // If player reaches the end of the board, end round
       if (newVal.players.some(({ position }) => position === 10)) {
         if (newVal.roundCount === 5) return { ...newVal, isGameOver: true }
 
         newVal.isRoundOver = true
         newVal.isDealing = false
-        newVal.roundCount += 1
-        newVal.dangerPosition = 1
-        newVal.dangerCards = [null, null, null, null, null, null, null, null]
-        newVal.history = ["dark", "dark", "dark", "dark", "dark"]
-        newVal.strikes = []
-        newVal.players = newVal.players.map((player) => ({
-          ...player,
-          position: 1,
-        }))
+
+        const winnerPoints = newVal.players.filter(
+          (player) => player.position !== player.betPosition
+        ).length
+        newVal.players = newVal.players.map((player) => {
+          if (player.position === player.betPosition) {
+            return { ...player, balance: player.balance + 1 }
+          } else if (player.position === 8) {
+            return { ...player, balance: player.balance + winnerPoints }
+          } else {
+            return player
+          }
+        })
       }
       return newVal
     })
@@ -116,7 +120,32 @@ export const useLogicEngine = () => {
       ),
     }))
   const startGame = () =>
-    setGameState((prev) => ({ ...prev, isOnboarding: false }))
+    setGameState((prev) => ({ ...prev, isOnboarding: false, isBetting: true }))
+  const startNextRound = () => {
+    setGameState((prev) => ({
+      ...prev,
+      isBetting: true,
+      isRoundOver: false,
+      // Reset round state
+      roundCount: prev.roundCount + 1,
+      dangerPosition: 1,
+      dangerCards: [null, null, null, null, null, null, null, null],
+      history: ["dark", "dark", "dark", "dark", "dark"],
+      strikes: [],
+      players: prev.players.map((player) => ({
+        ...player,
+        position: 1,
+        betPosition: 1,
+      })),
+    }))
+  }
 
-  return { ...state, toggleDealing, addPlayer, placeBet, startGame }
+  return {
+    ...state,
+    toggleDealing,
+    addPlayer,
+    placeBet,
+    startGame,
+    startNextRound,
+  }
 }
