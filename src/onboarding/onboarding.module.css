@@ -1,3 +1,7 @@
+.logo {
+  width: 320px;
+}
+
 .onboardingContainer {
   display: flex;
   flex-direction: column;

@@ -8,13 +8,13 @@ import fishOrange from "../global/assets/fish-orange.svg"
 import fishPurple from "../global/assets/fish-purple.svg"
 
 const iconMap = {
-  fishBlue,
-  fishGreen,
-  fishOrange,
-  fishPurple,
+  blue: fishBlue,
+  green: fishGreen,
+  orange: fishOrange,
+  purple: fishPurple,
 }
 
-export const AddPlayerTile = ({ color, icon }) => {
+export const AddPlayerTile = ({ color }) => {
   const { addPlayer } = useLogicEngine()
   const [inputValue, setInputValue] = useState("")
 
@@ -26,7 +26,7 @@ export const AddPlayerTile = ({ color, icon }) => {
         background: `var(--player-${color})`,
       }}
     >
-      <img src={iconMap[icon]} />
+      <img src={iconMap[color]} />
       <div className={style.actionContainer}>
         <input
           id='my-text-input'
@@ -40,6 +40,7 @@ export const AddPlayerTile = ({ color, icon }) => {
             border: `2px solid var(--player-${color}-dark)`,
             backgroundColor: `var(--player-${color})`,
             color: `var(--player-${color}-dark)`,
+            // TODO
             // color.placeholder:`var(--player-${color}-dark)`,
           }}
         />

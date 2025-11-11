@@ -8,13 +8,13 @@ export const Onboarding = () => {
   const { startGame } = useLogicEngine()
   return (
     <>
-      <img src={logo} style={{ width: "320px" }} />
+      <img src={logo} alt='logo' />
       <div className={style.onboardingContainer}>
         <div className={style.playerContainer}>
-          <AddPlayerTile color='purple' icon='fishPurple' />
-          <AddPlayerTile color='orange' icon='fishOrange' />
-          <AddPlayerTile color='green' icon='fishGreen' />
-          <AddPlayerTile color='blue' icon='fishBlue' />
+          <AddPlayerTile color='purple' />
+          <AddPlayerTile color='orange' />
+          <AddPlayerTile color='green' />
+          <AddPlayerTile color='blue' />
         </div>
         <button onClick={() => startGame()} className={style.button}>
           <h2>Play Game</h2>
