@@ -7,6 +7,7 @@ const EngineContext = createContext()
 export const EngineProvider = ({ children }) => {
   const [gameState, setGameState] = useState({
     isOnboarding: true,
+    isBetting: false,
     isDealing: false,
     isRoundOver: false,
     isGameOver: false,
