@@ -8,6 +8,7 @@ import { EndGame } from "./endGame/EndGame"
 function App() {
   const { players, roundCount, dangerCards, isOnboarding, isGameOver } =
     useLogicEngine()
+    
 
   if (isOnboarding) {
     return <Onboarding />

@@ -26,10 +26,22 @@
   width: fit-content;
 }
 .textInput::placeholder {
-  /* color: var(--player-blue-dark); */
   text-align: center;
   font-family: "Fredoka One";
   font-size: 24px;
+}
+
+.green::placeholder {
+  color: var(--player-green-dark);
+}
+.purple::placeholder {
+  color: var(--player-purple-dark);
+}
+.blue::placeholder {
+  color: var(--player-blue-dark);
+}
+.orange::placeholder {
+  color: var(--player-orange-dark);
 }
 
 .saveButton {
