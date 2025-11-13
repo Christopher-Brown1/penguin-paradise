@@ -3,6 +3,7 @@ import "./App.css"
 import { Header } from "../src/game/Header"
 import { useLogicEngine } from "./logicEngine/useLogicEngine"
 import { Onboarding } from "./onboarding/Onboarding"
+import { EndGame } from "./endGame/EndGame"
 
 function App() {
   const { players, roundCount, dangerCards, isOnboarding, isGameOver } =
@@ -11,7 +12,7 @@ function App() {
   if (isOnboarding) {
     return <Onboarding />
   } else if (isGameOver) {
-    return <p>gameover</p>
+    return <EndGame />
   } else {
     return (
       <>

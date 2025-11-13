@@ -1,0 +1,64 @@
+.scorecardContainer {
+  display: flex;
+  padding: 32px 8px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-radius: 12px;
+}
+
+.playerInfoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.playerNameContainer {
+  display: flex;
+  padding: 0 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  border: 2px solid var(--player-purple-dark);
+  background: var(--white);
+}
+
+.playerText {
+  color: var(--dark);
+}
+
+.fishContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* margin: 1px 2px 3px 4px; */
+  width: 40px;
+  height: 33px;
+  background-repeat: noRepeat;
+  background-size: cover;
+  background-position: center center;
+  background-image: url("../global/assets/fish-white.svg");
+}
+
+.playerScore {
+  color: var(--dark);
+  padding: 0px 14px 0px 17px;
+}
+
+.strikeContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.strikeMarker {
+  width: 16px;
+  height: 16px;
+  aspect-ratio: 1/1;
+  fill: var(--white);
+  stroke-width: 2px;
+  stroke: var(--dark);
+}
