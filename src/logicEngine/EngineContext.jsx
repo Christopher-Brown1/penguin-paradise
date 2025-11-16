@@ -6,18 +6,47 @@ const EngineContext = createContext()
 
 export const EngineProvider = ({ children }) => {
   const [gameState, setGameState] = useState({
-    isOnboarding: true,
+    isOnboarding: false,
     isBetting: false,
     isDealing: false,
     isRoundOver: false,
     isGameOver: false,
     cardsId: null,
     roundCount: 0,
-    dangerPosition: 1,
-    dangerCards: [null, null, null, null, null, null, null, null],
+    dangerPosition: 0,
+    dangerCards: [null, null, null, null, null, null, null],
     history: ["dark", "dark", "dark", "dark", "dark"],
     strikes: [], // array of colors
-    players: [],
+    players: [
+      {
+        name: "Chris",
+        color: "purple",
+        balance: 5,
+        position: 0,
+        betPosition: 0,
+      },
+      {
+        name: "Jameson",
+        color: "orange",
+        balance: 5,
+        position: 0,
+        betPosition: 0,
+      },
+      {
+        name: "Nisha",
+        color: "blue",
+        balance: 5,
+        position: 0,
+        betPosition: 0,
+      },
+      {
+        name: "Dad",
+        color: "green",
+        balance: 5,
+        position: 0,
+        betPosition: 0,
+      },
+    ],
   })
 
   const intervalRef = useRef(null)
@@ -34,22 +63,22 @@ export const EngineProvider = ({ children }) => {
       .then((res) => res.json())
       .then((data) => {
         const color = suitToPlayerMap[data.cards[0].suit]
-        return oneOff
-          ? color
-          : setGameState((prev) => ({
-              ...prev,
-              players: prev.players.map((player) => ({
-                ...player,
-                position:
-                  player.color === color
-                    ? player.position + 1
-                    : player.position,
-              })),
-              history: [color, ...prev.history],
-              strikes: prev.strikes.includes(color)
-                ? [color, ...prev.strikes]
-                : [color],
-            }))
+        if (oneOff) {
+          return color
+        } else {
+          setGameState((prev) => ({
+            ...prev,
+            players: prev.players.map((player) => ({
+              ...player,
+              position:
+                player.color === color ? player.position + 1 : player.position,
+            })),
+            history: [color, ...prev.history],
+            strikes: prev.strikes.includes(color)
+              ? [color, ...prev.strikes]
+              : [color],
+          }))
+        }
       })
 
   // Manage interval in the provider - only runs once

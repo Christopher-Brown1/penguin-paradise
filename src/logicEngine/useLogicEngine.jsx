@@ -17,7 +17,7 @@ export const useLogicEngine = () => {
     if (direction === "start") {
       return players.map((player) => ({
         ...player,
-        position: player.color === color ? 1 : player.position,
+        position: player.color === color ? 0 : player.position,
       }))
     } else {
       return players.map((player) => ({
@@ -71,15 +71,14 @@ export const useLogicEngine = () => {
       )
         // Draw card asynchronously and update state
         drawCard(true).then((color) => {
-          newVal.dangerCard = color
           newVal.players = movePlayer(newVal.players, color, "backward")
-          newVal.dangerCards[newVal.dangerPosition - 1] = color
+          newVal.dangerCards[newVal.dangerPosition] = color
           newVal.dangerPosition = newVal.dangerPosition + 1
         })
 
       // If player reaches the end of the board, end round
-      if (newVal.players.some(({ position }) => position === 10)) {
-        if (newVal.roundCount === 5) return { ...newVal, isGameOver: true }
+      if (newVal.players.some(({ position }) => position === 7)) {
+        if (newVal.roundCount === 5) newVal.isGameOver = true
 
         newVal.isRoundOver = true
         newVal.isDealing = false
@@ -150,14 +149,14 @@ export const useLogicEngine = () => {
       isRoundOver: false,
       // Reset round state
       roundCount: prev.roundCount + 1,
-      dangerPosition: 1,
+      dangerPosition: 0,
       dangerCards: [null, null, null, null, null, null, null, null],
       history: ["dark", "dark", "dark", "dark", "dark"],
       strikes: [],
       players: prev.players.map((player) => ({
         ...player,
-        position: 1,
-        betPosition: 1,
+        position: 0,
+        betPosition: 0,
       })),
     }))
   }
