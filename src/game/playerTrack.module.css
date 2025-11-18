@@ -1,0 +1,22 @@
+.playerTrack {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-top: 2px dashed var(--grey);
+}
+
+.square {
+  position: relative;
+}
+
+.penguin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 67px;
+  height: 100%;
+  max-height: 80px;
+}

@@ -1,172 +1,184 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from "react"
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useState, useEffect, useRef, useContext } from "react"
+import {
+  DEAL_INTERVAL,
+  DECK_API_URL,
+  suitToPlayerMap,
+  initialGameState,
+} from "./consts"
 
-import { DECK_API_URL } from "./consts"
+const EngineContext = createContext()
 
-import { useEngineContext } from "./EngineContext"
+export const EngineProvider = ({ children }) => {
+  const [gameState, setGameState] = useState(initialGameState)
+  const latestGameStateRef = useRef(gameState)
+  const intRef = useRef(null)
 
-export const useLogicEngine = () => {
-  const {
-    gameState: state,
-    setGameState,
-    drawCard: contextDrawCard,
-  } = useEngineContext()
-
-  // Utils - Private functions (defined first so they can be used in effects)
-  const movePlayer = (players, color, direction = "forward") => {
-    if (direction === "start") {
-      return players.map((player) => ({
-        ...player,
-        position: player.color === color ? 1 : player.position,
-      }))
-    } else {
-      return players.map((player) => ({
-        ...player,
-        position:
-          player.color === color
-            ? player.position + (direction === "forward" ? 1 : -1)
-            : player.position,
-      }))
+  const clearIntervalRef = () => {
+    if (intRef.current) {
+      clearInterval(intRef.current)
+      intRef.current = null
     }
   }
 
-  // Local drawCard for oneOff cases (used in history effect)
-  const drawCard = (oneOff = false) => {
-    if (oneOff) {
-      // For oneOff, use context's drawCard which handles the ref properly
-      return contextDrawCard(true)
-    }
-    // Regular drawCard is now handled by the context provider's interval
-    return contextDrawCard(false)
-  }
-
-  const fetchNewDeck = () =>
-    fetch(`${DECK_API_URL}new/shuffle/?deck_count=2`)
-      .then((res) => res.json())
-      .then((data) => {
-        setGameState((prev) => ({
-          ...prev,
-          cardsId: data.deck_id,
-          isLoading: false,
-          roundCount: 1,
-        }))
-      })
+  // Update latest game state ref
+  useEffect(() => {
+    latestGameStateRef.current = gameState
+  }, [gameState])
 
   // Fetch deck on mount
   useEffect(() => {
-    !state.cardsId && fetchNewDeck()
+    if (!gameState.cardsId)
+      fetchNewDeck().then((cardsId) =>
+        setGameState((prev) => ({ ...prev, cardsId, isOnboarding: true }))
+      )
   }, [])
 
-  // After every update to history, run logic checks
+  // Process dealing logic
   useEffect(() => {
-    setGameState((prev) => {
-      const newVal = { ...prev }
-      // If 3 strikes, move player to start
-      if (newVal.strikes.length === 3)
-        newVal.players = movePlayer(newVal.players, newVal.strikes[0], "start")
+    if (gameState.isDealing) {
+      // Clear any existing interval first
+      clearIntervalRef()
 
-      // If danger position is reached, draw card
-      if (
-        newVal.players.every(({ position }) => position > newVal.dangerPosition)
-      )
-        // Draw card asynchronously and update state
-        drawCard(true).then((color) => {
-          newVal.dangerCard = color
-          newVal.players = movePlayer(newVal.players, color, "backward")
-          newVal.dangerCards[newVal.dangerPosition - 1] = color
-          newVal.dangerPosition = newVal.dangerPosition + 1
-        })
+      processDeal(latestGameStateRef.current).then(setGameState)
+      intRef.current = setInterval(() => {
+        processDeal(latestGameStateRef.current).then(setGameState)
+      }, DEAL_INTERVAL)
 
-      // If player reaches the end of the board, end round
-      if (newVal.players.some(({ position }) => position === 10)) {
-        if (newVal.roundCount === 5) return { ...newVal, isGameOver: true }
+      return () => clearIntervalRef()
+    } else {
+      // Clear interval when isDealing becomes false
+      clearIntervalRef()
+    }
+  }, [gameState.isDealing])
 
-        newVal.isRoundOver = true
-        newVal.isDealing = false
+  // Game functions
+  const startGame = (players) => {
+    const defaultData = { balance: 5, position: 0, betPosition: 0 }
 
-        const winnerPoints = newVal.players.filter(
-          (player) => player.position !== player.betPosition
-        ).length
-        newVal.players = newVal.players.map((player) => {
-          if (player.position === player.betPosition) {
-            return { ...player, balance: player.balance + 1 }
-          } else if (player.position === 8) {
-            return { ...player, balance: player.balance + winnerPoints }
-          } else {
-            return player
-          }
-        })
-      }
-      return newVal
-    })
-  }, [state.history])
-
-  // Handlers - Exported functions
-
+    setGameState((prev) => ({
+      ...prev,
+      isOnboarding: false,
+      isBetting: true,
+      players: Object.keys(players).map((color) => ({
+        ...defaultData,
+        color,
+        name: players[color],
+      })),
+    }))
+  }
   const toggleDealing = () =>
     setGameState((prev) => ({ ...prev, isDealing: !prev.isDealing }))
   const placeBet = (color, bet) =>
     setGameState((prev) => ({
       ...prev,
-      players: prev.players.map((player) =>
-        player.color === color ? { ...player, betPosition: bet } : player
-      ),
+      players: placeBetHandler(prev.players, color, bet),
     }))
-  const startGame = (players) => {
-    const defaultData = { balance: 5, position: 1, betPosition: 1 }
-    
+  const startNextRound = () =>
     setGameState((prev) => ({
-      ...prev,
-      isOnboarding: false,
-      isBetting: true,
-      players: [
-        {
-          name: players.purple,
-          color: "purple",
-          ...defaultData,
-        },
-        {
-          name: players.orange,
-          color: "orange",
-          ...defaultData,
-        },
-        {
-          name: players.blue,
-          color: "blue",
-          ...defaultData,
-        },
-        {
-          name: players.green,
-          color: "green",
-          ...defaultData,
-        },
-      ],
-    }))
-  }
-  const startNextRound = () => {
-    setGameState((prev) => ({
-      ...prev,
+      ...initialGameState,
       isBetting: true,
       isRoundOver: false,
-      // Reset round state
-      roundCount: prev.roundCount + 1,
-      dangerPosition: 1,
-      dangerCards: [null, null, null, null, null, null, null, null],
-      history: ["dark", "dark", "dark", "dark", "dark"],
-      strikes: [],
-      players: prev.players.map((player) => ({
-        ...player,
-        position: 1,
-        betPosition: 1,
-      })),
+      players: resetPlayers(prev.players),
     }))
+
+  return (
+    <EngineContext.Provider
+      value={{ gameState, startGame, toggleDealing, startNextRound, placeBet }}
+    >
+      {children}
+    </EngineContext.Provider>
+  )
+}
+
+// Card utils
+const drawCard = (cardsId) =>
+  fetch(`${DECK_API_URL}${cardsId}/draw/?count=1`)
+    .then((res) => res.json())
+    .then((data) => suitToPlayerMap[data.cards[0].suit])
+    .catch(async () => await fetchNewDeck()) // If card draw fails, fetch a new deck
+const fetchNewDeck = () =>
+  fetch(`${DECK_API_URL}new/shuffle/?deck_count=1`)
+    .then((res) => res.json())
+    .then((data) => data.deck_id)
+const processDeal = async (gameState) => {
+  // Draw first card immediately
+  const newVal = { ...gameState }
+  const color = await drawCard(gameState.cardsId)
+  newVal.history = [color, ...gameState.history]
+  newVal.strikes = gameState.strikes.includes(color)
+    ? [color, ...gameState.strikes]
+    : [color]
+
+  // 1. Move player(color) forward
+  newVal.players = movePlayer(newVal.players, color)
+  // 2. If 3 strikes, move player to start
+  if (newVal.strikes.length === 3) {
+    newVal.players = movePlayer(newVal.players, newVal.strikes[0], "start")
+  }
+  // 3. If danger position is reached, draw a danger card
+  if (
+    newVal.players.every(({ position }) => position > newVal.dangerPosition)
+  ) {
+    const dangerColor = await drawCard(gameState.cardsId)
+    newVal.dangerCards[newVal.dangerPosition] = dangerColor
+    newVal.dangerPosition = newVal.dangerPosition + 1
+    newVal.players = movePlayer(newVal.players, dangerColor, "backward")
+  }
+  // 4. If player reaches the end of the board, end round
+  if (newVal.players.some(({ position }) => position === 7)) {
+    newVal.isRoundOver = true
+    newVal.isDealing = false
+    // If round count is 5, end game
+    if (newVal.roundCount === 5) newVal.isGameOver = true
+
+    newVal.players = scorePlayers(newVal.players)
   }
 
-  return {
-    ...state,
-    toggleDealing,
-    placeBet,
-    startGame,
-    startNextRound,
-  }
+  return newVal
+}
+
+// Player utils
+const movePlayer = (players, color, direction = "forward") =>
+  players.map((player) => ({
+    ...player,
+    position:
+      direction === "start"
+        ? 0
+        : player.color === color
+        ? player.position + (direction === "forward" ? 1 : -1)
+        : player.position,
+  }))
+const placeBetHandler = (prevPlayers, color, bet) =>
+  prevPlayers.map((player) =>
+    player.color === color ? { ...player, betPosition: bet } : player
+  )
+const resetPlayers = (players) =>
+  players.map((player) => ({
+    ...player,
+    position: 0,
+    betPosition: 0,
+  }))
+const scorePlayers = (players) => {
+  const winnerPoints = players.filter(
+    (p) => p.position !== p.betPosition
+  ).length
+
+  return players.map((player) => ({
+    ...player,
+    balance:
+      player.position === player.betPosition
+        ? player.balance + 1
+        : player.position === 8
+        ? player.balance + winnerPoints
+        : player.balance,
+  }))
+}
+
+export const useLogicEngine = () => {
+  const { gameState, startGame, toggleDealing, startNextRound, placeBet } =
+    useContext(EngineContext)
+
+  return { ...gameState, startGame, toggleDealing, startNextRound, placeBet }
 }

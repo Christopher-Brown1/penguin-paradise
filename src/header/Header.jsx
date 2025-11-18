@@ -1,7 +1,7 @@
-import style from "../game/header.module.css"
+import style from "./header.module.css"
 
 import Logo from "../global/assets/logo.svg?react"
-import { DealButton } from "../game/DealButton"
+import { DealButton } from "./DealButton"
 import { useLogicEngine } from "../logicEngine/useLogicEngine"
 
 export const Header = () => {

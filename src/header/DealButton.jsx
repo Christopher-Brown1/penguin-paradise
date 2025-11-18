@@ -1,7 +1,7 @@
-import style from "../game/dealButton.module.css"
+import style from "./dealButton.module.css"
 
-import play from "../game/assets/play.svg"
-import pause from "../game/assets/pause.svg"
+import play from "./assets/play.svg"
+import pause from "./assets/pause.svg"
 import { useLogicEngine } from "../logicEngine/useLogicEngine"
 
 export const DealButton = () => {
