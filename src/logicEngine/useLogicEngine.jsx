@@ -102,14 +102,7 @@ export const useLogicEngine = () => {
   }, [state.history])
 
   // Handlers - Exported functions
-  const addPlayer = (name, color) =>
-    setGameState((prev) => ({
-      ...prev,
-      players: [
-        ...prev.players,
-        { name, color, balance: 5, position: 1, betPosition: 1 },
-      ],
-    }))
+
   const toggleDealing = () =>
     setGameState((prev) => ({ ...prev, isDealing: !prev.isDealing }))
   const placeBet = (color, bet) =>
@@ -119,8 +112,37 @@ export const useLogicEngine = () => {
         player.color === color ? { ...player, betPosition: bet } : player
       ),
     }))
-  const startGame = () =>
-    setGameState((prev) => ({ ...prev, isOnboarding: false, isBetting: true }))
+  const startGame = (players) => {
+    const defaultData = { balance: 5, position: 1, betPosition: 1 }
+    
+    setGameState((prev) => ({
+      ...prev,
+      isOnboarding: false,
+      isBetting: true,
+      players: [
+        {
+          name: players.purple,
+          color: "purple",
+          ...defaultData,
+        },
+        {
+          name: players.orange,
+          color: "orange",
+          ...defaultData,
+        },
+        {
+          name: players.blue,
+          color: "blue",
+          ...defaultData,
+        },
+        {
+          name: players.green,
+          color: "green",
+          ...defaultData,
+        },
+      ],
+    }))
+  }
   const startNextRound = () => {
     setGameState((prev) => ({
       ...prev,
@@ -143,7 +165,6 @@ export const useLogicEngine = () => {
   return {
     ...state,
     toggleDealing,
-    addPlayer,
     placeBet,
     startGame,
     startNextRound,
