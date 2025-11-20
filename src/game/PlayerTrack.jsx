@@ -12,6 +12,7 @@ import PurpleSquareFinal from "./assets/purple-square-final.svg"
 import PenguinPurple from "../global/assets/penguin-purple.svg"
 import style from "./playerTrack.module.css"
 import { PlayerScorecard } from "../global/PlayerScorecard"
+import { useLogicEngine } from "../logicEngine/useLogicEngine"
 
 const IconMap = {
   blue: {
@@ -38,6 +39,7 @@ const IconMap = {
 
 export const PlayerTrack = ({ player, strikes }) => {
   const { square, final, penguin } = IconMap[player.color]
+  const { placeBet } = useLogicEngine()
 
   return (
     <div
@@ -52,7 +54,17 @@ export const PlayerTrack = ({ player, strikes }) => {
       />
 
       {new Array(8).fill(0).map((_, index) => (
-        <div key={index} className={style.square}>
+        <div
+          key={index}
+          className={style.square}
+          onClick={() => placeBet(player.color, index)}
+          style={{
+            border:
+              player.betPosition === index
+                ? `3px solid red`
+                : `3px solid transparent`,
+          }}
+        >
           <img
             src={index === 7 ? final : square}
             alt={index === 7 ? "Final" : "Square"}

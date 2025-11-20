@@ -15,6 +15,7 @@ const killerMap = {
 
 export const GameBoard = () => {
   const { players, strikes, dangerCards } = useLogicEngine()
+
   return (
     <div style={{ marginTop: "16px" }}>
       {players.map((player) => (
