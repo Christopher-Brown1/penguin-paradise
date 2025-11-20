@@ -144,15 +144,16 @@ const movePlayer = (players, color, direction = "forward") =>
   players.map((player) => ({
     ...player,
     position:
-      direction === "start"
-        ? 0
-        : player.color === color
-        ? player.position + (direction === "forward" ? 1 : -1)
+      player.color === color
+        ? player.position +
+          (direction === "start" ? 0 : direction === "forward" ? 1 : -1)
         : player.position,
   }))
 const placeBetHandler = (prevPlayers, color, bet) =>
   prevPlayers.map((player) =>
-    player.color === color ? { ...player, betPosition: bet } : player
+    player.color === color
+      ? { ...player, betPosition: bet, balance: player.balance - 1 }
+      : player
   )
 const resetPlayers = (players) =>
   players.map((player) => ({
