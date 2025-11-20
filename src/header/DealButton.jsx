@@ -7,13 +7,10 @@ import { useLogicEngine } from "../logicEngine/useLogicEngine"
 export const DealButton = () => {
   const { toggleDealing, isDealing, isBetting } = useLogicEngine()
 
-  // If the game is in betting mode, show a different, disabled CTA
   if (isBetting) {
     return (
       <button
         className={`${style.buttonContainer} ${style.buttonBetting}`}
-        disabled
-        aria-disabled
       >
         <div className={style.textContainer}>
           <h2 className={style.textBig}>Place Fish Bets</h2>
