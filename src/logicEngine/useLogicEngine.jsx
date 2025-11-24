@@ -69,7 +69,11 @@ export const EngineProvider = ({ children }) => {
     }))
   }
   const toggleDealing = () =>
-    setGameState((prev) => ({ ...prev, isDealing: !prev.isDealing }))
+    setGameState((prev) => ({
+      ...prev,
+      isDealing: !prev.isDealing,
+      isBetting: false,
+    }))
   const placeBet = (color, bet) =>
     setGameState((prev) => ({
       ...prev,
