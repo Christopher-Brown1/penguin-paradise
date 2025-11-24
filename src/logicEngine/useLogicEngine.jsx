@@ -55,7 +55,7 @@ export const EngineProvider = ({ children }) => {
 
   // Game functions
   const startGame = (players) => {
-    const defaultData = { balance: 5, position: 0, betPosition: 0 }
+    const defaultData = { balance: 5, position: 0, betPosition: null }
 
     setGameState((prev) => ({
       ...prev,
@@ -120,6 +120,7 @@ const processDeal = async (gameState) => {
   // 2. If 3 strikes, move player to start
   if (newVal.strikes.length === 3) {
     newVal.players = movePlayer(newVal.players, newVal.strikes[0], "start")
+    newVal.strikes = []
   }
   // 3. If danger position is reached, draw a danger card
   if (
@@ -149,21 +150,27 @@ const movePlayer = (players, color, direction = "forward") =>
     ...player,
     position:
       player.color === color
-        ? player.position +
-          (direction === "start" ? 0 : direction === "forward" ? 1 : -1)
+        ? direction === "start"
+          ? 0
+          : player.position + (direction === "forward" ? 1 : -1)
         : player.position,
   }))
 const placeBetHandler = (prevPlayers, color, bet) =>
   prevPlayers.map((player) =>
     player.color === color
-      ? { ...player, betPosition: bet, balance: player.balance - 1 }
+      ? {
+          ...player,
+          betPosition: bet,
+          balance:
+            player.betPosition === null ? player.balance - 1 : player.balance,
+        }
       : player
   )
 const resetPlayers = (players) =>
   players.map((player) => ({
     ...player,
     position: 0,
-    betPosition: 0,
+    betPosition: null,
   }))
 const scorePlayers = (players) => {
   const winnerPoints = players.filter(
@@ -175,7 +182,7 @@ const scorePlayers = (players) => {
     balance:
       player.position === player.betPosition
         ? player.balance + 1
-        : player.position === 8
+        : player.position === 7
         ? player.balance + winnerPoints
         : player.balance,
   }))
