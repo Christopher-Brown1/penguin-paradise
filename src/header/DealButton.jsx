@@ -10,12 +10,13 @@ export const DealButton = () => {
   if (isBetting) {
     return (
       <button
-        className={`${style.buttonContainer} ${style.buttonBetting}`}
+        className={style.buttonContainer}
+        onClick={() => toggleDealing(true)}
       >
         <div className={style.textContainer}>
           <h2 className={style.textBig}>Place Fish Bets</h2>
           <p className={style.textSmall} style={{ width: "240px" }}>
-            Where do you think your penguin will be at the end of the round.
+            Click here to start the round.
           </p>
         </div>
       </button>

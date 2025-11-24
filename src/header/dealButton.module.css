@@ -28,15 +28,3 @@
   text-align: center;
   font-size: 12px;
 }
-
-.buttonBetting {
-  opacity: 0.9;
-  border-color: var(--accent-warning);
-  background: linear-gradient(180deg, rgba(255,152,0,0.06), rgba(255,152,0,0.03));
-  cursor: default;
-  pointer-events: none;
-}
-
-.iconDim {
-  opacity: 0.45;
-}
