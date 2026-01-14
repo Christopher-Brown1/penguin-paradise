@@ -1,0 +1,48 @@
+.roundCounter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.roundCounterText {
+  color: var(--dark);
+  font-family: "Fredoka One";
+  font-size: 32px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.roundDotContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.roundDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--dark);
+}
+.roundDotActive {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--dark);
+  background-color: var(--dark);
+}
+
+.dangerCardsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 105px;
+  padding: 0 50px;
+}
+
+.dangerCard {
+  width: 33px;
+  height: 40px;
+}

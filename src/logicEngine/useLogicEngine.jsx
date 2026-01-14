@@ -85,6 +85,7 @@ export const EngineProvider = ({ children }) => {
       isBetting: true,
       isRoundOver: false,
       players: resetPlayers(prev.players),
+      roundCount: prev.roundCount + 1,
     }))
 
   return (
