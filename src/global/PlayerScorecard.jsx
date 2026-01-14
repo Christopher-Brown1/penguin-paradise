@@ -69,6 +69,13 @@ export const PlayerScorecard = ({ name, color, balance, strikes }) => {
                   ? style.strikeCircleColored
                   : style.strikeCircle
               }
+              style={{
+                border: `2px solid var(--player-${color}-dark)`,
+                backgroundColor:
+                  strikeCount >= 3
+                    ? `var(--player-${color}-dark)`
+                    : `var(--white)`,
+              }}
             />
           </div>
         </div>

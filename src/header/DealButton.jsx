@@ -5,7 +5,8 @@ import pause from "./assets/pause.svg"
 import { useLogicEngine } from "../logicEngine/useLogicEngine"
 
 export const DealButton = () => {
-  const { toggleDealing, isDealing, isBetting } = useLogicEngine()
+  const { toggleDealing, startNextRound, isDealing, isBetting, isRoundOver } =
+    useLogicEngine()
 
   if (isBetting) {
     return (
@@ -18,6 +19,19 @@ export const DealButton = () => {
           <p className={style.textSmall} style={{ width: "240px" }}>
             Click here to start the round.
           </p>
+        </div>
+      </button>
+    )
+  }
+
+  if (isRoundOver) {
+    return (
+      <button
+        className={style.buttonContainer}
+        onClick={() => startNextRound()}
+      >
+        <div className={style.textContainer}>
+          <h2 className={style.textBig}>Click to start next round</h2>
         </div>
       </button>
     )
