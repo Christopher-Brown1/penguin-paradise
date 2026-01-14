@@ -1,6 +1,6 @@
 import { useLogicEngine } from "../logicEngine/useLogicEngine"
 import { PlayerTrack } from "./PlayerTrack"
-import style from "./gameBoard.module.css"
+import style from "./gameboard.module.css"
 
 import killer from "./assets/killer.svg"
 import killerBlue from "./assets/killer-blue.svg"
